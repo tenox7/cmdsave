@@ -12,7 +12,7 @@ Abstract:
 
 Version:
 
-    1.0 - initial release
+    1.1 - crlf fix
 
 Author:
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
     if(GetConsoleScreenBufferInfo(hConsole, &cbi)==0)
         ERRPT("GetConsoleScreenBufferInfo");
 
-    buff=HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, (cbi.dwSize.X+2)*sizeof(WCHAR));
+    buff=HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, (cbi.dwSize.X+3)*sizeof(WCHAR));
     if(buff==NULL)
         ERRPT("HeapAlloc");
 
@@ -92,14 +92,15 @@ int main(int argc, char **argv) {
         if(n==0)
             n=-1;
 
-        buff[n+1]='\n';
-        buff[n+2]='\0';
+        buff[n+1]='\r';
+        buff[n+2]='\n';
+        buff[n+3]='\0';
 
         if(WriteFile(hFile, buff, strlen(buff), &ochr, NULL)==0)
             ERRPT("WriteFile");
 
         // for vertical trim
-        if(buff[0]!='\n')
+        if(buff[0]!='\r')
             l=GetFileSize(hFile, NULL);
        
         start.Y++;
